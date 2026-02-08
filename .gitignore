@@ -1,7 +1,8 @@
+# entorno virtual
+asd/
 .asd
-*.asd
-.asd
-*asd
+
+# Python
 __pycache__/
 *.pyc
 
