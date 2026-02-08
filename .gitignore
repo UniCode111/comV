@@ -1,5 +1,7 @@
-.venv
-*.venv
-.env
-*env
+.asd
+*.asd
+.asd
+*asd
+__pycache__/
+*.pyc
 
