@@ -1,16 +1,13 @@
-"""
-Author: Benjamin Ramirez Canela
-Description: This code is intended to practice lists, functions, 
-"""
-
+# --------------------------------------------------
+# Functions practice – input + validation
+# --------------------------------------------------
 
 # --------------------------------------------------
 # Problem 1: Rectangle area and perimeter
 # --------------------------------------------------
 # Description:
-# Calculates the area and perimeter of a rectangle using two
-# separate functions. Input values are validated before calling
-# the functions.
+# Reads width and height from the user and calculates
+# the area and perimeter of a rectangle.
 #
 # Inputs:
 # - width (float)
@@ -25,10 +22,9 @@ Description: This code is intended to practice lists, functions,
 # - height > 0
 #
 # Test cases:
-# 1) Normal: width=5, height=3
-# 2) Edge case: width=0.1, height=0.1
-# 3) Error: width=-2, height=4
-
+# 1) Normal: 5, 3
+# 2) Edge: 0.1, 0.1
+# 3) Error: -2, 4
 
 def calculate_area(width, height):
     return width * height
@@ -38,15 +34,16 @@ def calculate_perimeter(width, height):
     return 2 * (width + height)
 
 
-width = 5
-height = 3
+try:
+    width = float(input("Width: ").strip())
+    height = float(input("Height: ").strip())
 
-if width > 0 and height > 0:
-    area = calculate_area(width, height)
-    perimeter = calculate_perimeter(width, height)
-    print("Area:", area)
-    print("Perimeter:", perimeter)
-else:
+    if width > 0 and height > 0:
+        print("Area:", calculate_area(width, height))
+        print("Perimeter:", calculate_perimeter(width, height))
+    else:
+        print("Error: invalid input")
+except ValueError:
     print("Error: invalid input")
 
 
@@ -54,22 +51,22 @@ else:
 # Problem 2: Grade classifier
 # --------------------------------------------------
 # Description:
-# Classifies a numeric score into a letter grade.
+# Classifies a numeric grade into a letter category.
 #
 # Inputs:
-# - score (int or float)
+# - score (float or int)
 #
 # Outputs:
-# - Category (A, B, C, D, F)
+# - Score
+# - Category
 #
 # Validations:
 # - 0 <= score <= 100
 #
 # Test cases:
-# 1) Normal: score=85
-# 2) Edge case: score=100
-# 3) Error: score=120
-
+# 1) Normal: 85
+# 2) Edge: 100
+# 3) Error: 120
 
 def classify_grade(score):
     if score >= 90:
@@ -84,13 +81,15 @@ def classify_grade(score):
         return "F"
 
 
-score = 85
+try:
+    score = float(input("Score: ").strip())
 
-if 0 <= score <= 100:
-    category = classify_grade(score)
-    print("Score:", score)
-    print("Category:", category)
-else:
+    if 0 <= score <= 100:
+        print("Score:", score)
+        print("Category:", classify_grade(score))
+    else:
+        print("Error: invalid input")
+except ValueError:
     print("Error: invalid input")
 
 
@@ -98,7 +97,8 @@ else:
 # Problem 3: List statistics
 # --------------------------------------------------
 # Description:
-# Receives a list of numbers and returns a dictionary including min, max, and average.
+# Reads a comma-separated list of numbers and calculates
+# min, max and average.
 #
 # Inputs:
 # - numbers_text (string)
@@ -109,14 +109,13 @@ else:
 # - Average
 #
 # Validations:
-# - Non-empty input
-# - All elements must be numeric
+# - Non-empty list
+# - All values numeric
 #
 # Test cases:
 # 1) Normal: "10,20,30"
-# 2) Edge case: "5"
+# 2) Edge: "5"
 # 3) Error: "10,a,30"
-
 
 def summarize_numbers(numbers_list):
     return {
@@ -126,36 +125,34 @@ def summarize_numbers(numbers_list):
     }
 
 
-numbers_text = "10,20,30"
+numbers_text = input("Numbers (comma separated): ").strip()
 
-numbers_text = numbers_text.strip()
+parts = numbers_text.split(",")
+numbers = []
+valid = True
 
-if numbers_text:
+for part in parts:
+    part = part.strip()
     try:
-        numbers = []
-        for item in numbers_text.split(","):
-            numbers.append(float(item.strip()))
-
-        if numbers:
-            summary = summarize_numbers(numbers)
-            print("Min:", summary["min"])
-            print("Max:", summary["max"])
-            print("Average:", summary["average"])
-        else:
-            print("Error: invalid input")
-
+        numbers.append(float(part))
     except ValueError:
-        print("Error: invalid input")
+        valid = False
+
+if valid and len(numbers) > 0:
+    result = summarize_numbers(numbers)
+    print("Min:", result["min"])
+    print("Max:", result["max"])
+    print("Average:", result["average"])
 else:
     print("Error: invalid input")
 
 
 # --------------------------------------------------
-# Problem 4: Apply discount list (pure function)
+# Problem 4: Apply discount list
 # --------------------------------------------------
 # Description:
-# Applies a discount to a list of prices without modifying
-# the original list.
+# Applies a discount to a list of prices without
+# modifying the original list.
 #
 # Inputs:
 # - prices_text (string)
@@ -170,7 +167,122 @@ else:
 # - 0 <= discount_rate <= 1
 #
 # Test cases:
-# 1) Normal: "100,200,300", 0.10
-# 2) Edge case: "50", 0
+# 1) Normal: "100,200,300", 0.1
+# 2) Edge: "50", 0
 # 3) Error: "100,-20", 0.2
+
+def apply_discount(prices_list, discount_rate):
+    discounted = []
+    for price in prices_list:
+        discounted.append(price * (1 - discount_rate))
+    return discounted
+
+
+prices_text = input("Prices: ").strip()
+discount_text = input("Discount rate: ").strip()
+
+prices = []
+valid = True
+
+try:
+    discount_rate = float(discount_text)
+except ValueError:
+    valid = False
+
+for part in prices_text.split(","):
+    part = part.strip()
+    try:
+        value = float(part)
+        if value > 0:
+            prices.append(value)
+        else:
+            valid = False
+    except ValueError:
+        valid = False
+
+if valid and 0 <= discount_rate <= 1 and len(prices) > 0:
+    print("Original prices:", prices)
+    print("Discounted prices:", apply_discount(prices, discount_rate))
+else:
+    print("Error: invalid input")
+
+
+# --------------------------------------------------
+# Problem 5: Greeting function
+# --------------------------------------------------
+# Description:
+# Generates a greeting with optional title.
+#
+# Inputs:
+# - name (string)
+# - title (string, optional)
+#
+# Outputs:
+# - Greeting
+#
+# Validations:
+# - name not empty
+#
+# Test cases:
+# 1) Normal: Alice, Dr.
+# 2) Edge: Bob
+# 3) Error: ""
+
+def greet(name, title=""):
+    name = name.strip()
+    title = title.strip()
+
+    if title != "":
+        return "Hello, " + title + " " + name + "!"
+    else:
+        return "Hello, " + name + "!"
+
+
+name = input("Name: ").strip()
+title = input("Title (optional): ").strip()
+
+if name != "":
+    print("Greeting:", greet(name, title))
+else:
+    print("Error: invalid input")
+
+
+# --------------------------------------------------
+# Problem 6: Factorial
+# --------------------------------------------------
+# Description:
+# Calculates factorial using a for loop.
+#
+# Inputs:
+# - n (int)
+#
+# Outputs:
+# - n
+# - Factorial
+#
+# Validations:
+# - 0 <= n <= 20
+#
+# Test cases:
+# 1) Normal: 5
+# 2) Edge: 0
+# 3) Error: -3
+
+def factorial(n):
+    result = 1
+    for i in range(1, n + 1):
+        result *= i
+    return result
+
+
+try:
+    n = int(input("n: ").strip())
+
+    if 0 <= n <= 20:
+        print("n:", n)
+        print("Factorial:", factorial(n))
+    else:
+        print("Error: invalid input")
+except ValueError:
+    print("Error: invalid input")
 
